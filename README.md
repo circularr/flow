@@ -1,6 +1,6 @@
 # AI Flow Editor
 
-A browser-based tool for creating AI prompt workflows using a node-based interface. Create prompts, generate variations, and build complex flows with OpenAI's GPT-4.1-nano model.
+A browser-based tool for creating AI prompt workflows using a node-based interface. Create prompts, generate variations, and build complex flows with OpenAI's GPT-4.1-nano model and more.
 
 ## Features
 
@@ -20,12 +20,8 @@ A browser-based tool for creating AI prompt workflows using a node-based interfa
 
 ## API Key
 
-The application is pre-configured with an OpenAI API key, but you can change it in the settings panel if needed.
+Add your own in gui. 
 
-## Supported Models
-
-Currently supports:
-- GPT-4.1-nano-2025-04-14
 
 ## Local Development
 
