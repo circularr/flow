@@ -1,0 +1,647 @@
+:root {
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --light-gray: #f3f4f6;
+    --dark-gray: #4b5563;
+    --border-color: #e5e7eb;
+    --text-color: #1f2937;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+    color: var(--text-color);
+    background-color: #f9fafb;
+    height: 100vh;
+    overflow: hidden;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.primary-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.success-btn {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.success-btn:hover {
+    background-color: #0d9488;
+}
+
+.danger-btn {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.danger-btn:hover {
+    background-color: #dc2626;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    margin-top: 4px;
+    background-color: white;
+}
+
+textarea {
+    resize: vertical;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+/* Node count controls */
+.count-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#node-count-slider {
+    flex: 1;
+    margin: 0;
+    height: 6px;
+    appearance: none;
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+#node-count-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#node-count-slider::-webkit-slider-thumb:hover {
+    background: var(--primary-hover);
+}
+
+#node-count-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#node-count-slider::-moz-range-thumb:hover {
+    background: var(--primary-hover);
+}
+
+#node-count-display {
+    font-size: 16px;
+    font-weight: 600;
+    min-width: 24px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+/* App Layout */
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    background-color: white;
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--primary-color);
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.toolbar {
+    height: 60px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: white;
+}
+
+.canvas {
+    flex: 1;
+    background-color: var(--light-gray);
+    position: relative;
+    overflow: auto;
+}
+
+.settings {
+    margin-top: 30px;
+}
+
+.settings h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.setting-group {
+    margin-bottom: 16px;
+}
+
+/* Node Styling */
+.node {
+    position: absolute;
+    width: 280px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    max-height: 400px; /* Default max height */
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+/* Merge mode node styling */
+.merge-mode .node.selectable {
+    cursor: pointer;
+}
+
+.merge-mode .node.selectable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-color);
+}
+
+.merge-mode .node.selected {
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Source node in merge mode */
+.merge-mode .node.merge-source {
+    border: 2px solid var(--success-color);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+}
+
+.node.minimized {
+    max-height: 60px;
+    overflow: hidden;
+}
+
+.node.maximized {
+    max-height: 80vh; /* 80% of viewport height when maximized */
+}
+
+.node-header {
+    padding: 12px 16px;
+    background-color: #f8fafc;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 25px;
+}
+
+.node.minimized .node-header {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.node-header h3 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.node-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.node-view-toggle {
+    margin-left: auto;
+    margin-right: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.node-view-toggle:hover {
+    opacity: 1;
+}
+
+.node-action-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: var(--dark-gray);
+    border: 1px solid var(--border-color);
+}
+
+.node-action-btn:hover {
+    background-color: var(--light-gray);
+}
+
+.node-body {
+    padding: 12px 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.node-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.node-body::-webkit-scrollbar-track {
+    background: var(--light-gray);
+    border-radius: 3px;
+}
+
+.node-body::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 3px;
+}
+
+.node-body::-webkit-scrollbar-thumb:hover {
+    background-color: var(--dark-gray);
+}
+
+.node-prompt, .node-instructions {
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.node-instructions {
+    font-style: italic;
+    color: #4b5563;
+    background-color: #f3f4f6;
+    padding: 8px;
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-color);
+}
+
+.node-response {
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    white-space: pre-wrap;
+}
+
+.node-response.loading {
+    color: var(--dark-gray);
+    font-style: italic;
+}
+
+.node-connector {
+    width: 16px;
+    height: 16px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    z-index: 20;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.node-connector:hover {
+    background-color: var(--primary-hover);
+    transform: translateX(-50%) scale(1.2);
+}
+
+/* Node connector menu */
+.connector-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    padding: 5px 0;
+    z-index: 100;
+    min-width: 150px;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.connector-menu-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.connector-menu-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Variation nodes and connections */
+.has-variations {
+    border: 2px solid #6366f1 !important;
+}
+
+.has-variations .node-header {
+    background-color: #eff6ff;
+}
+
+.connection-label {
+    padding: 2px 5px;
+    background-color: #6366f1;
+    color: white;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Improves appearance of connector menu - keeping this style which has better design */
+
+.menu-option {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.menu-option:hover {
+    background-color: var(--light-gray);
+    color: var(--primary-color);
+}
+
+/* Text button for cancel */
+.text-btn {
+    background: none;
+    border: none;
+    color: var(--dark-gray);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    text-decoration: underline;
+}
+
+.text-btn:hover {
+    color: var(--primary-color);
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Merge mode overlay styling */
+#merge-instruction-overlay {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    background-color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    text-align: center;
+    max-width: 90%;
+    width: 400px;
+}
+
+.merge-instructions h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.merge-instructions p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: var(--dark-gray);
+}
+
+#complete-merge-selection-btn {
+    margin-top: 15px;
+    width: 100%;
+}
+
+#complete-merge-selection-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Add highlight for active toolbar buttons */
+.toolbar button.active {
+    background-color: var(--primary-hover);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Selected nodes count in merge modal */
+.selected-count-info {
+    background-color: var(--light-gray);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--dark-gray);
+}
+
+#selected-nodes-count {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 16px;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 24px;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90%;
+}
+
+.close-modal {
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: var(--dark-gray);
+}
+
+/* Node Selection for Merging */
+.node-selection-container {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px;
+    margin-top: 4px;
+    background-color: var(--light-gray);
+}
+
+.node-selection-item {
+    padding: 8px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: flex-start;
+}
+
+.node-selection-item input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+    margin-top: 3px;
+}
+
+.node-selection-content {
+    flex: 1;
+}
+
+.node-selection-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.node-selection-text {
+    font-size: 13px;
+    color: var(--dark-gray);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+.merge-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.merge-options > div {
+    display: flex;
+    align-items: center;
+}
+
+.merge-options input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+}
+
+.merge-options label {
+    margin-bottom: 0;
+    display: inline;
+}
+
+/* Connection Lines */
+.jtk-connector {
+    z-index: 5;
+}
+
+.jtk-endpoint {
+    z-index: 6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 12px;
+    }
+    
+    .logo {
+        margin-bottom: 16px;
+    }
+    
+    .settings {
+        margin-top: 16px;
+    }
+}

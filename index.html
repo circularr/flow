@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Flow Editor</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsplumb@2.15.6/dist/js/jsplumb.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="logo">AI Flow Editor</div>
+            <button id="add-node-btn" class="primary-btn">+ Add Node</button>
+            <div class="settings">
+                <h3>Settings</h3>
+                <div class="setting-group">
+                    <label for="api-key">OpenAI API Key</label>
+                    <input type="password" id="api-key" placeholder="Enter your OpenAI API key">
+                </div>
+                <div class="setting-group">
+                    <label for="model-select">Model</label>
+                    <select id="model-select">
+                        <optgroup label="GPT-4.1 Models">
+                            <option value="gpt-4.1-nano-2025-04-14" selected>GPT-4.1 Nano ($0.10)</option>
+                            <option value="gpt-4.1-mini-2025-04-14">GPT-4.1 Mini ($0.50)</option>
+                            <option value="gpt-4.1-2025-04-14">GPT-4.1 ($2.00)</option>
+                        </optgroup>
+                        <optgroup label="O1 Models">
+                            <option value="o1-mini">O1 Mini ($5.00)</option>
+                            <option value="o1-2024-12-17">O1 ($15.00)</option>
+                            <option value="o1-pro-2025-03-19">O1 Pro ($150.00)</option>
+                        </optgroup>
+                        <optgroup label="O3/O4 Models">
+                            <option value="o3-mini-2025-01-31">O3 Mini ($1.10)</option>
+                            <option value="o3-2025-04-16">O3 ($10.00)</option>
+                            <option value="o4-mini-2025-04-16">O4 Mini ($1.10)</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="toolbar">
+                <button id="new-node-btn" title="Create New Node">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                </button>
+                <button id="clear-canvas" title="Clear Canvas">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="canvas" class="canvas"></div>
+        </div>
+    </div>
+    <div id="node-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create Prompt Node</h2>
+            <div class="form-group">
+                <label for="node-prompt">Prompt</label>
+                <textarea id="node-prompt" rows="5" placeholder="Enter your prompt here..."></textarea>
+            </div>
+            <div class="form-group node-count-control">
+                <label for="node-count">Number of Nodes</label>
+                <div class="count-control">
+                    <input type="range" id="node-count-slider" min="1" max="10" value="1">
+                    <span id="node-count-display">1</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="node-instructions">Custom Instructions (Optional)</label>
+                <textarea id="node-instructions" rows="3" placeholder="Add custom instructions to display on the node..."></textarea>
+            </div>
+            <button id="create-node-btn" class="primary-btn">Create Node</button>
+        </div>
+    </div>
+    <div id="variation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create Variations</h2>
+            <div class="form-group">
+                <label for="variation-count">Number of Variations</label>
+                <input type="number" id="variation-count" min="1" max="5" value="3">
+            </div>
+            <div class="form-group">
+                <label for="variation-prompt">Custom Variation Instructions (Optional)</label>
+                <textarea id="variation-prompt" rows="3" placeholder="Enter custom instructions for variations..."></textarea>
+            </div>
+            <button id="create-variations-btn" class="primary-btn">Generate Variations</button>
+        </div>
+    </div>
+    
+    <div id="merge-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Finish Combining Selected Nodes</h2>
+            <div class="selected-count-info">
+                <span id="selected-nodes-count">2</span> nodes selected for combining
+            </div>
+            <div class="form-group">
+                <label for="merge-custom">Add Custom Instructions</label>
+                <textarea id="merge-custom" rows="4" placeholder="What would you like to do with the selected content? (e.g. 'Combine these ideas into a cohesive paragraph')"></textarea>
+            </div>
+            <button id="create-merge-btn" class="primary-btn">Create Combined Node</button>
+        </div>
+    </div>
+    <script src="js/config.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
